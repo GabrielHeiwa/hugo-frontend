@@ -13,6 +13,7 @@ type SessionStore = {
     sessions: Session[],
     addSession: (newSession: Session) => void;
     deleteSession: (sessionId: number) => void;
+    editSession: (sessionId: number, newSession: Session) => void;
 }
 
 const sessionStore = create<SessionStore>()((set) => ({
@@ -25,8 +26,31 @@ const sessionStore = create<SessionStore>()((set) => ({
             title: "Proxmox Syrtex"
         }
     ],
-    addSession: (newSession: any) => (set((state) => ({ sessions: [...state.sessions, newSession] }))),
-    deleteSession: (sessionId: number) => (set((state) => ({ sessions: state.sessions.filter((_, i) => i !== sessionId) })))
+    addSession(newSession) {
+        set((state) => {
+            state.sessions.push(newSession);
+
+            return { sessions: state.sessions };
+        })
+    },
+    deleteSession(sessionId) {
+        set((state) => {
+            const newSessions = state.sessions.filter((_, index) => index !== sessionId)
+
+            return { sessions: newSessions }
+        })
+    },
+    editSession(sessionId, newSession) {
+        set((state) => {
+            const newSessions = state.sessions.map((session, index) => {
+                if (index === sessionId) return newSession;
+                return session;
+            });
+
+            return { sessions: newSessions }
+
+        });
+    },
 }));
 
 export { sessionStore };
