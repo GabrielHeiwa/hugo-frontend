@@ -1,12 +1,45 @@
 import { Button } from "@/components/ui/button";
-import { DialogHeader, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
+import { useSession } from "@/hooks/session";
+import { Trash } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Copy, Trash } from "lucide-react";
-import { Label } from "@/components/ui/label";
+const deleteSessionSchema = z.object({
+    confirmation: z.string().refine(value => value === "CONFIRMAR", {
+        message: "É necessário ser exatamente 'CONFIRMAR'"
+    })
+})
 
-export function DeleteSessionDialog() {
+type DeleteSessionSchema = z.infer<typeof deleteSessionSchema>;
+
+type DeleteSessionDialog = React.PropsWithChildren<{
+    sessionId: number;
+}>
+
+export function DeleteSessionDialog({ sessionId }: DeleteSessionDialog) {
+    // Hooks
+    const form = useForm<DeleteSessionSchema>({ resolver: zodResolver(deleteSessionSchema) });
+    const { deleteSession } = useSession();
+
+    // Functions
+    function handleDeleteSession(data: DeleteSessionSchema) {
+        try {
+
+            deleteSession(sessionId);
+
+            console.log("Sessão removida com sucesso.");
+
+            return;
+
+        } catch (error: any) {
+            console.error("Houve um erro ao deletar a sessão.");
+            throw error;
+        }
+    }
 
     return <Dialog modal={true}>
         <DialogTrigger asChild>
@@ -24,14 +57,23 @@ export function DeleteSessionDialog() {
             </DialogHeader>
             <div className="flex items-center space-x-2">
                 <div className="grid flex-1 gap-2">
-                    <Label htmlFor="link" className="sr-only">
-                        Confirmação
-                    </Label>
-                    <Input
-                        id="confirm"
-                        defaultValue="https://ui.shadcn.com/docs/installation"
-                        readOnly
-                    />
+                    <Form {...form}>
+                        <form onSubmit={() => {}}>
+                            <FormField
+                                control={form.control}
+                                name="confirmation"
+                                render={({ field }) => (
+                                    <FormItem className="col-span-3">
+                                        <FormLabel className="sr-only">Confirmação</FormLabel>
+                                        <FormControl>
+                                            <Input  placeholder="CONFIRMAR" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </form>
+                    </Form>
                 </div>
             </div>
             <DialogFooter>
@@ -40,7 +82,12 @@ export function DeleteSessionDialog() {
                         Close
                     </Button>
                 </DialogClose>
-                <Button type="submit">Apagar</Button>
+                <Button
+                    onClick={form.handleSubmit(handleDeleteSession)}
+                    className="bg-red-600 hover:bg-red-500"
+                >
+                    Apagar
+                </Button>
             </DialogFooter>
         </DialogContent>
     </Dialog>

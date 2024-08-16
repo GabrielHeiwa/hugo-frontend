@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Edit } from "lucide-react";
 import { useForm } from "react-hook-form";
 
-
 export function EditSessionDialog() {
     // Hooks
     const form = useForm();
