@@ -11,7 +11,8 @@ export type Session = {
 
 type SessionStore = {
     sessions: Session[],
-    addSession: (newSession: Session) => void; 
+    addSession: (newSession: Session) => void;
+    deleteSession: (sessionId: number) => void;
 }
 
 const sessionStore = create<SessionStore>()((set) => ({
@@ -24,7 +25,8 @@ const sessionStore = create<SessionStore>()((set) => ({
             title: "Proxmox Syrtex"
         }
     ],
-    addSession: (newSession: any) => (set((state) => ({ sessions: [...state.sessions, newSession]})))
+    addSession: (newSession: any) => (set((state) => ({ sessions: [...state.sessions, newSession] }))),
+    deleteSession: (sessionId: number) => (set((state) => ({ sessions: state.sessions.filter((_, i) => i !== sessionId) })))
 }));
 
 export { sessionStore };

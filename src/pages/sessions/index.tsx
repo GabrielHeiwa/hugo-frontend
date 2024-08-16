@@ -27,15 +27,15 @@ export default function SessionsPage() {
                     <dt className="text-sm font-medium leading-6 text-gray-900">Usuário da sessão</dt>
                 </div>
 
-                {sessions.map((session) => (
-                    <div className="px-4 py-6 sm:grid sm:grid-cols-4 sm:gap-4 sm:px-0">
+                {sessions.map((session, i) => (
+                    <div key={i} className="px-4 py-6 sm:grid sm:grid-cols-4 sm:gap-4 sm:px-0">
                         <dt className="text-sm font-medium leading-6 text-gray-900">{session.title}</dt>
                         <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-1 sm:mt-0">{session.host}</dd>
                         <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-1 sm:mt-0">{session.username}</dd>
                         <div className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-1 sm:mt-0 flex justify-end gap-2 pr-4">
                             <ConnectSessionButton />
                             <EditSessionDialog />
-                            <DeleteSessionDialog />
+                            <DeleteSessionDialog sessionId={i} />
                         </div>
                     </div>
                 ))}
