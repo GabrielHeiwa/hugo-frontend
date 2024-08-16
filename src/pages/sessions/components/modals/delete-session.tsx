@@ -1,10 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { DialogHeader, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
-
-import { Copy, Trash } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import { Trash } from "lucide-react";
 
 export function DeleteSessionDialog() {
 

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type Session = {
+export type Session = {
     host: string;
     port: number;
     username: string;
