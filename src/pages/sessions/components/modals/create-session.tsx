@@ -7,6 +7,7 @@ import { Session } from "@/stores/session";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
+import { handleCreateSession } from "@/requests/session/create";
 
 const createSessionSchema = z.object({
     title: z.string().min(6, "Minimo de 6 caracteres."),
@@ -27,7 +28,7 @@ export function CreateSessionDialog() {
     const { addSession } = useSession();
 
     // Functions
-    function handleAddNewSession({ host, password, title, username, port }: CreateSessionSchema) {
+    async function handleAddNewSession({ host, password, title, username, port }: CreateSessionSchema) {
         try {
 
             const newSession: Session = {
@@ -37,6 +38,8 @@ export function CreateSessionDialog() {
                 password,
                 port: Number(port)
             };
+
+            await handleCreateSession(newSession);
 
             addSession(newSession);
 
