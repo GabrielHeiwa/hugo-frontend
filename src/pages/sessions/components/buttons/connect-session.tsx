@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/hooks/session";
+import { connectSessionRequest } from "@/requests/session/connect";
 import { ScreenShare } from "lucide-react";
 
 type ConnectSessionButto = React.PropsWithChildren<{ sessionId: number }>
@@ -9,14 +10,16 @@ export function ConnectSessionButton({ sessionId }: ConnectSessionButto) {
     const { sessions } = useSession();
 
     // Functions
-    function handleConnectSession() {
-        const { host, port, username } = sessions[sessionId]
-        const connectUrl = `ssh://${username}@${host}:${port}`
+    async function handleConnectSession() {
+        // const { host, port, username } = sessions[sessionId]
+        // const connectUrl = `ssh://${username}@${host}:${port}`
 
         const anchor = document.createElement("a")
-        anchor.href = connectUrl;
+        anchor.href = "/terminal?id=1";
 
         anchor.click();
+
+        // await connectSessionRequest({ sessionId: "a29ce3e6-d49c-409c-955a-20bb7987cb6a" }); 
 
         return;
     }

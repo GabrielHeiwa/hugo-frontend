@@ -3,10 +3,40 @@ import { CreateSessionDialog } from "./components/modals/create-session";
 import { DeleteSessionDialog } from "./components/modals/delete-session";
 import { EditSessionDialog } from "./components/modals/edit-session";
 import { ConnectSessionButton } from "./components/buttons/connect-session";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+
 
 export default function SessionsPage() {
     // Hooks
-    const { sessions } = useSession();
+    const { addSession, sessions } = useSession();
+    const {
+        isPending: listSessionsIsPeding,
+        data: listSessionsData,
+        error: listSessionsError,
+        isFetched: listSessionsIsFetched
+    } = useQuery({
+        queryKey: ['list-sessions'],
+        queryFn: () => fetch('http://localhost:3000/sessions/list').then(res => res.json()),
+    });
+
+    // if (listSessionsIsPeding) {
+    //     return <p>Carregando...</p>
+    // }
+
+    // if (listSessionsError) {
+    //     return <pre>{JSON.stringify(listSessionsError, null, 2)}</pre>
+    // }
+
+    useEffect(() => {
+        console.log(listSessionsData)
+
+        if (listSessionsData && !listSessionsIsFetched) {
+            for (const session of listSessionsData) {
+                addSession(session);
+            }
+        }
+    }, [listSessionsData])
 
     return <div className="container">
         <div className="px-4 sm:px-0 flex justify-between">

@@ -8,6 +8,9 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import SessionsPage from './pages/sessions/index.tsx';
+import TerminalPage from './pages/terminal/index.tsx';
+import QueryProvider from './query.tsx';
+import XTermPage from './pages/xterm/index.tsx';
 
 const router = createBrowserRouter([
   {
@@ -17,11 +20,21 @@ const router = createBrowserRouter([
   {
     path: "/session",
     element: <SessionsPage />
+  },
+  {
+    path: "/terminal",
+    element: <TerminalPage />
+  },
+  {
+    path: "/xterm",
+    element: <XTermPage />
   }
 ]);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <QueryProvider>
+      <RouterProvider router={router} />
+    </QueryProvider>
   </StrictMode>,
 )
